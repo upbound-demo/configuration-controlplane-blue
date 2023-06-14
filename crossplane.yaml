@@ -1,0 +1,20 @@
+apiVersion: meta.pkg.crossplane.io/v1alpha1
+kind: Configuration
+metadata:
+  name: configuration-controlplane-blue
+spec:
+  crossplane:
+    version: ">=v1.12.1-0"
+  dependsOn:
+  # Entries here cannot have runtime configs like image pull secret or revision
+  # history limit etc since the consumers of this package may have different
+  # opinions about those settings for a specific control plane.
+    - configuration: xpkg.upbound.io/upbound/configuration-rds
+      version: ">=v0.0.2"
+    - configuration: xpkg.upbound.io/upbound/configuration-eks
+      version: ">=v0.0.2"
+  # It is a MUST that you should either have your own Configuration manifest to
+  # point to the pull secret for this package or somehow authorize both
+  # Crossplane and Upbound Space cluster to pull from this repo.
+    - configuration: internal-repo.acme.com/acme/platform-core:f5df693
+      version: ">=v0.1.0"

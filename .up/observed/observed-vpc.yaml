@@ -1,0 +1,11 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: VPC
+metadata:
+  name: example
+  annotations:
+    crossplane.io/external-name: vpc-23123213
+spec:
+  managementPolicy: Observe
+  forProvider:
+    cidrBlock: 10.255.255.0/28
+    region: us-east-1

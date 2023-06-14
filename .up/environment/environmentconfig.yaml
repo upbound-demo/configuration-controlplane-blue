@@ -1,0 +1,17 @@
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: EnvironmentConfig
+metadata:
+  name: controlplane
+data:
+  # Organization specific metadata.
+  costCenter:
+    name: Purchasing
+    id: 123
+  group:
+    name: group-colors
+    id: 8347
+  team:
+    name: team-blue
+    id: 321534
+  controlPlane:
+    name: controlplane-blue

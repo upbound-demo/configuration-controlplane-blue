@@ -1,0 +1,13 @@
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: platform-core
+spec:
+  ignoreCrossplaneConstraints: false
+  package: 'internal-repo.acme.com/acme/platform-core:f5df693'
+  packagePullPolicy: IfNotPresent
+  packagePullSecrets:
+    - name: internal-pull-secret
+  revisionActivationPolicy: Automatic
+  revisionHistoryLimit: 1
+  skipDependencyResolution: false

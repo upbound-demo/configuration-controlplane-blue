@@ -1,0 +1,9 @@
+apiVersion: k8s.starter.org/v1alpha1
+kind: XNetwork
+metadata:
+  name: orgwide-network
+  annotations:
+    crossplane.io/external-name: mynetwork
+spec:
+  region: us-east-1
+  managementPolicy: Observe # to be propagated to all MRs.
