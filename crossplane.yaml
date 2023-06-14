@@ -6,6 +6,9 @@ spec:
   crossplane:
     version: ">=v1.12.1-0"
   dependsOn:
+  # You can also build a "acme-corp" configuration that contains all these
+  # dependencies and not tie it to a specific control plane.
+
   # Entries here cannot have runtime configs like image pull secret or revision
   # history limit etc since the consumers of this package may have different
   # opinions about those settings for a specific control plane.
