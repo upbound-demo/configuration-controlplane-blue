@@ -6,18 +6,85 @@ spec:
   crossplane:
     version: ">=v1.12.1-0"
   dependsOn:
-  # You can also build a "acme-corp" configuration that contains all these
-  # dependencies and not tie it to a specific control plane.
-
-  # Entries here cannot have runtime configs like image pull secret or revision
-  # history limit etc since the consumers of this package may have different
-  # opinions about those settings for a specific control plane.
-    - configuration: xpkg.upbound.io/upbound/configuration-rds
-      version: ">=v0.0.2"
-    - configuration: xpkg.upbound.io/upbound/configuration-eks
-      version: ">=v0.0.2"
-  # It is a MUST that you should either have your own Configuration manifest to
-  # point to the pull secret for this package or somehow authorize both
-  # Crossplane and Upbound Space cluster to pull from this repo.
+    # Configurations
+    #
+    # Requires an image pull secret named "internal-pull-secret" to be present to
+    # pull the package from the internal registry.
     - configuration: internal-repo.acme.com/acme/platform-core:f5df693
-      version: ">=v0.1.0"
+      version: "v0.1.0"
+      ignoreCrossplaneConstraints: false
+      packagePullPolicy: IfNotPresent
+      packagePullSecrets:
+        - name: internal-pull-secret
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: false
+    - configuration: xpkg.upbound.io/upbound/configuration-rds
+      version: "v0.0.2"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: false
+    - configuration: xpkg.upbound.io/upbound/configuration-eks
+      version: "v0.0.2"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: false
+
+    # Providers
+
+    # Helm Provider
+    - provider: xpkg.upbound.io/crossplane-contrib/provider-helm
+      version: "v0.15.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+
+    # AWS Providers
+    #
+    # Even though they are dependencies of the Configurations above, we'd like
+    # to use a ControllerConfig, so we need to declare all Providers.
+    #
+    # Their ProviderConfig and ControllerConfig manifets are in .up/providers/aws
+    - provider: xpkg.upbound.io/upbound-release-candidates/provider-aws-rds
+      version: "v0.36.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+      controllerConfigRef:
+        name: irsa
+    - provider: xpkg.upbound.io/upbound-release-candidates/provider-aws-eks
+      version: "v0.36.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+      controllerConfigRef:
+        name: irsa
+    - provider: xpkg.upbound.io/upbound-release-candidates/provider-aws-ec2
+      version: "v0.36.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+      controllerConfigRef:
+        name: irsa
+    - provider: xpkg.upbound.io/upbound-release-candidates/provider-aws-iam
+      version: "v0.36.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+      controllerConfigRef:
+        name: irsa
+    - provider: xpkg.upbound.io/upbound-release-candidates/provider-aws-config
+      version: "v0.36.0"
+      packagePullPolicy: IfNotPresent
+      revisionActivationPolicy: Automatic
+      revisionHistoryLimit: 1
+      skipDependencyResolution: true
+      controllerConfigRef:
+        name: irsa
